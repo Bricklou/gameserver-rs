@@ -24,3 +24,5 @@ credentials.json
 **/node_modules/*
 
 activate-cargo-watch.txt
+
+.pnpm-store/
