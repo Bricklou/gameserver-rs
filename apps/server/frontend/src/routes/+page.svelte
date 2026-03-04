@@ -1,2 +1,14 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import { goto } from '$app/navigation';
+	import { authStore } from '$lib/auth/auth.svelte';
+	import { resolve } from '$app/paths';
+
+	// Redirect to dashboard if already logged in
+	$effect(() => {
+		if (authStore.isAuthenticated) {
+			goto(resolve('/(protected)/dashboard'));
+		} else {
+			goto(resolve('/login'));
+		}
+	});
+</script>
