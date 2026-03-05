@@ -1,0 +1,9 @@
+{
+  "current_server": "",
+  "server_index": {
+    "minecraft": {
+      "location": "server",
+      "provider": "minecraft"
+    }
+  }
+}

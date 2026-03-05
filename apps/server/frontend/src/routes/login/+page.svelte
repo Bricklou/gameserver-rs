@@ -12,7 +12,7 @@
 
 	let loading = $state(false);
 	let error = $state('');
-	let username = $state('');
+	let user = $state('');
 	let password = $state('');
 	async function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
@@ -20,7 +20,7 @@
 		error = '';
 
 		try {
-			const response = await api.login(username, password);
+			const response = await api.login(user, password);
 
 			goto('');
 		} catch (err) {
@@ -40,6 +40,10 @@
 			onsubmit={handleSubmit}
 		>
 			<h2 class="font-semibold tracking-wide">Login</h2>
+
+			{#if error}
+				<div class="rounded bg-red-100 px-4 py-2 text-red-800 truncate text-wrap">{error}</div>
+			{/if}
 
 			<div class="flex flex-col gap-4">
 				<label class="flex flex-col gap-1">

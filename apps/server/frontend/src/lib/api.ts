@@ -12,10 +12,10 @@ export class Api {
 			.then((resp) => resp.data);
 	}
 
-	public async login(username: string, password: string) {
+	public async login(user: string, password: string) {
 		return this.httpClient
 			.post('api/signin', {
-				json: { username, password }
+				json: { user, password }
 			})
 			.json<LoginResponse>();
 	}

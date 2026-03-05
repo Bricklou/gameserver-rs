@@ -15,9 +15,12 @@ mkdir -p ~/.kube
 k3d kubeconfig get dev-cluster > ~/.kube/config
 chmod 600 ~/.kube/config
 
-# Add completions
-k3d completion bash > ~/completion-for-k3d.bash
-echo 'source ~/completion-for-k3d.bash' >> ~/.bashrc
 echo 'export CARGO_HOME="$HOME/.cargo"' >> ~/.bashrc
+
+# Add completions
+mkdir -p ~/.local/share/bash-completion/completions/
+printf '. <(k3d completion bash)\n'       >~/.local/share/bash-completion/completions/k3d
+printf '. <(rustup completions bash)\n'       >~/.local/share/bash-completion/completions/rustup
+printf '. <(rustup completions bash cargo)\n' >~/.local/share/bash-completion/completions/cargo
 
 echo "Development environment is ready!"

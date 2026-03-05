@@ -11,13 +11,13 @@ use std::{net::SocketAddr, path::Path, sync::Arc};
 // Axum is the routing framework, and the backbone to this project helping intergrate the backend with the frontend
 // and the general api, redirections, it will take form data and queries and make it easily accessible
 // I also use axum_login to take off alot of effort that would be required for authentication
+use crate::database::databasespec::IntoServer;
 use crate::database::{DatabaseError, Element};
 use crate::filesystem::TcpFileStream;
 use crate::filesystem::{FsType, send_multipart_over_broadcast};
 use crate::http::HeaderMap;
 use crate::kubernetes::verify_is_k8s_gameserver;
 use crate::middleware::from_fn;
-use crate::database::databasespec::IntoServer;
 use axum::Form;
 use axum::extract::Multipart;
 use axum::extract::Query;
@@ -1444,7 +1444,6 @@ pub async fn ensure_rcon(arc_state: Arc<RwLock<AppState>>) -> Result<(), String>
     Ok(())
 }
 
-
 async fn upload(
     State(arc_state): State<Arc<RwLock<AppState>>>,
     multipart: Multipart,
@@ -1476,9 +1475,7 @@ async fn migrate(
 
     "ok"
 }
-async fn refresh_status(
-    State(arc_state): State<Arc<RwLock<AppState>>>,
-) {
+async fn refresh_status(State(arc_state): State<Arc<RwLock<AppState>>>) {
     let mut state = arc_state.write().await;
     state.tcp_conn_status = {
         if check_channel_health(&state.tcp_tx, state.tcp_rx.resubscribe()).await {
@@ -2030,7 +2027,6 @@ async fn modify_intergration(
         )
             .into_response(),
         Err(e) => {
-
             let status_code = if let Some(db_err) = e.downcast_ref::<DatabaseError>() {
                 db_err.0
             } else {
@@ -2086,7 +2082,6 @@ async fn create_intergration(
         )
             .into_response(),
         Err(e) => {
-
             let status_code = if let Some(db_err) = e.downcast_ref::<DatabaseError>() {
                 db_err.0
             } else {
@@ -2206,7 +2201,7 @@ async fn get_server(
     let mut server_to_get = request.element.clone();
     if state.current_server.is_some() && request.element.is_empty() {
         server_to_get = state.current_server.clone().unwrap().servername;
-    } 
+    }
 
     // A bit unusual to have two ?? but it works in this case
     let result = state
@@ -2766,7 +2761,7 @@ impl AuthUser for User {
 // rely on the database to try and find the user entry, if it fails, its immediately unauthorized, or it will try and match the password next
 // if it fails, its unauthorized
 #[axum::debug_handler]
-pub async fn sign_in(
+async fn sign_in(
     State(arc_state): State<Arc<RwLock<AppState>>>,
     Form(request): Form<LoginData>,
 ) -> Result<Json<ResponseMessage>, StatusCode> {
